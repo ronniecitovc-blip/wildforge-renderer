@@ -6,7 +6,7 @@ on:
       manifest_b64:
         description: "Educational package encoded in Base64"
         required: true
-      callback_url:
+      resumeUrl:
         description: "Temporary n8n resume URL"
         required: true
 
@@ -45,6 +45,6 @@ jobs:
         run: sleep 8
       - name: Resume n8n
         env:
-          CALLBACK_URL: ${{ inputs.callback_url }}
+          CALLBACK_URL: ${{ inputs.resumeUrl }}
         run: |
           curl --fail --request POST --header "Content-Type: application/json" --data-binary @render-result.json "$CALLBACK_URL"
