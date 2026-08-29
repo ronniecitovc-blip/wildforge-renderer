@@ -1,0 +1,50 @@
+name: Render educational sheets
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_b64:
+        description: "Educational package encoded in Base64"
+        required: true
+      callback_url:
+        description: "Temporary n8n resume URL"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Prepare manifest
+        env:
+          MANIFEST_B64: ${{ inputs.manifest_b64 }}
+        run: |
+          printf '%s' "$MANIFEST_B64" | base64 --decode > edu-manifest.json
+      - name: Install renderer
+        working-directory: educational-renderer
+        run: npm install --omit=dev
+      - name: Render JPEG sheets
+        run: node educational-renderer/render.mjs edu-manifest.json
+      - name: Publish images in repository
+        run: |
+          git config user.name "educational-renderer"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/educativo
+          git commit -m "Educational sheets: $(date -u +%Y-%m-%dT%H:%M:%SZ)" || true
+          git push
+      - name: Wait for public raw files
+        run: sleep 8
+      - name: Resume n8n
+        env:
+          CALLBACK_URL: ${{ inputs.callback_url }}
+        run: curl --fail --request POST --header "Content-Type: application/json" --data-binary @render-result.json "$CALLBACK_URL"
+`
