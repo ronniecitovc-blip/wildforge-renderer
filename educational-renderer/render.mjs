@@ -46,14 +46,15 @@ function icon(area, color) {
 }
 
 function card(x, y, w, h, heading, body, accent, index) {
-  const title = wrap(heading, 28, 2);
-  const content = wrap(body, 54, 6);
+  const compact = w < 600;
+  const title = wrap(heading, compact ? 22 : 52, 2);
+  const content = wrap(body, compact ? 31 : 72, compact ? 6 : 4);
   return `<g>
     <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30" fill="#ffffff" stroke="#dbe7ef" stroke-width="3"/>
     <circle cx="${x + 48}" cy="${y + 55}" r="28" fill="${accent}"/>
     <text x="${x + 48}" y="${y + 66}" text-anchor="middle" font-family="Arial" font-size="30" font-weight="900" fill="#fff">${index}</text>
-    ${textLines(title, x + 92, y + 55, 29, '#12304a', 800, 1.15)}
-    ${textLines(content, x + 36, y + 130, 25, '#29465b', 500, 1.35)}
+    ${textLines(title, x + 92, y + 55, 26, '#12304a', 800, 1.15)}
+    ${textLines(content, x + 36, y + 130, 22, '#29465b', 500, 1.34)}
   </g>`;
 }
 
