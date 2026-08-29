@@ -110,13 +110,15 @@ function renderWorksheet(material) {
   const cards = [0, 1, 2].map((i) => {
     const y = 300 + i * 285;
     const heading = wrap(sections[i]?.heading || ('Actividad ' + (i + 1)), 30, 2);
-    const task = wrap(tasks[i] || sections[i]?.body || '', 48, 3);
+    const problem = wrap(sections[i]?.body || '', 44, 4);
+    const task = wrap(tasks[i] || '', 44, 2);
     return `<g>
       <rect x="42" y="${y}" width="996" height="260" rx="28" fill="#ffffff" stroke="${mono ? '#111111' : (i % 2 ? accent : primary)}" stroke-width="3"/>
       <circle cx="84" cy="${y + 45}" r="28" fill="${mono ? '#ffffff' : (i % 2 ? accent : primary)}" stroke="${primary}" stroke-width="3"/>
       <text x="84" y="${y + 56}" text-anchor="middle" font-family="Arial" font-size="28" font-weight="900" fill="${mono ? '#111111' : '#ffffff'}">${i + 1}</text>
       ${textLines(heading, 126, y + 48, 25, '#15324a', 800, 1.12)}
-      ${textLines(task, 72, y + 112, 22, '#29465b', 600, 1.28)}
+      ${textLines(problem, 72, y + 98, 19, '#29465b', 600, 1.24)}
+      ${textLines(task, 72, y + 210, 17, primary, 800, 1.16)}
       <rect x="548" y="${y + 32}" width="250" height="190" rx="20" fill="${pale}" stroke="${line}" stroke-width="3" stroke-dasharray="10 8"/>
       <text x="673" y="${y + 65}" text-anchor="middle" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Representa o dibuja</text>
       <path d="M575 ${y + 190}h196 M575 ${y + 155}h196 M575 ${y + 120}h196" stroke="${line}" stroke-width="2" opacity=".7"/>
@@ -153,7 +155,7 @@ function renderTimeline(material) {
   const events = [0, 1, 2].map((i) => {
     const y = 315 + i * 300;
     const heading = wrap(sections[i]?.heading || ('Momento ' + (i + 1)), 34, 2);
-    const body = wrap(sections[i]?.body || '', 58, 4);
+    const body = wrap(sections[i]?.body || '', 64, 4);
     const task = wrap(tasks[i] || '', 58, 2);
     return `<g>
       <circle cx="158" cy="${y + 78}" r="38" fill="${i % 2 ? accent : primary}" stroke="#ffffff" stroke-width="7"/>
