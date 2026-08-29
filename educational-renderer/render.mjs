@@ -58,7 +58,7 @@ function card(x, y, w, h, heading, body, accent, index) {
   </g>`;
 }
 
-function renderSvg(material) {
+function renderTheory(material) {
   const palette = material.palette || {};
   const primary = palette.primary || '#126e82';
   const accent = palette.accent || '#f59e0b';
@@ -87,6 +87,139 @@ function renderSvg(material) {
     <text x="54" y="1298" font-family="Arial" font-size="22" font-weight="800" fill="${primary}">INNOVAR PARA ENSEÑAR</text>
     <text x="1026" y="1298" text-anchor="end" font-family="Arial" font-size="20" fill="#52687a">${esc(material.area || 'Educación básica')} · ${esc(material.grade || '')}</text>
   </svg>`;
+}
+
+
+function visualPalette(material) {
+  const mono = material.visual_type === 'blanco_negro';
+  const palette = material.palette || {};
+  return {
+    primary: mono ? '#111111' : (palette.primary || '#126e82'),
+    accent: mono ? '#555555' : (palette.accent || '#f59e0b'),
+    pale: mono ? '#ffffff' : (palette.pale || '#eef8fa'),
+    line: mono ? '#111111' : '#cbdde7'
+  };
+}
+
+function renderWorksheet(material) {
+  const { primary, accent, pale, line } = visualPalette(material);
+  const mono = material.visual_type === 'blanco_negro';
+  const sections = Array.isArray(material.sections) ? material.sections.slice(0, 3) : [];
+  const tasks = Array.isArray(material.activities) ? material.activities.slice(0, 3) : [];
+  const title = wrap(material.title, 34, 2);
+  const cards = [0, 1, 2].map((i) => {
+    const y = 300 + i * 285;
+    const heading = wrap(sections[i]?.heading || ('Actividad ' + (i + 1)), 30, 2);
+    const task = wrap(tasks[i] || sections[i]?.body || '', 48, 3);
+    return \`<g>
+      <rect x="42" y="\${y}" width="996" height="260" rx="28" fill="#ffffff" stroke="\${mono ? '#111111' : (i % 2 ? accent : primary)}" stroke-width="3"/>
+      <circle cx="84" cy="\${y + 45}" r="28" fill="\${mono ? '#ffffff' : (i % 2 ? accent : primary)}" stroke="\${primary}" stroke-width="3"/>
+      <text x="84" y="\${y + 56}" text-anchor="middle" font-family="Arial" font-size="28" font-weight="900" fill="\${mono ? '#111111' : '#ffffff'}">\${i + 1}</text>
+      \${textLines(heading, 126, y + 48, 25, '#15324a', 800, 1.12)}
+      \${textLines(task, 72, y + 112, 22, '#29465b', 600, 1.28)}
+      <rect x="548" y="\${y + 32}" width="250" height="190" rx="20" fill="\${pale}" stroke="\${line}" stroke-width="3" stroke-dasharray="10 8"/>
+      <text x="673" y="\${y + 65}" text-anchor="middle" font-family="Arial" font-size="18" font-weight="800" fill="\${primary}">Representa o dibuja</text>
+      <path d="M575 \${y + 190}h196 M575 \${y + 155}h196 M575 \${y + 120}h196" stroke="\${line}" stroke-width="2" opacity=".7"/>
+      <rect x="822" y="\${y + 32}" width="190" height="88" rx="18" fill="#ffffff" stroke="\${line}" stroke-width="3"/>
+      <text x="842" y="\${y + 60}" font-family="Arial" font-size="18" font-weight="800" fill="\${primary}">Operación</text>
+      <path d="M846 \${y + 96}h142" stroke="\${primary}" stroke-width="2"/>
+      <rect x="822" y="\${y + 134}" width="190" height="88" rx="18" fill="#ffffff" stroke="\${line}" stroke-width="3"/>
+      <text x="842" y="\${y + 162}" font-family="Arial" font-size="18" font-weight="800" fill="\${primary}">Respuesta</text>
+      <path d="M846 \${y + 198}h142" stroke="\${primary}" stroke-width="2"/>
+    </g>\`;
+  }).join('');
+  return \`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+    <defs><linearGradient id="wsHead" x1="0" x2="1"><stop offset="0" stop-color="\${primary}"/><stop offset="1" stop-color="\${accent}"/></linearGradient></defs>
+    <rect width="1080" height="1350" fill="\${pale}"/>
+    <rect x="24" y="20" width="1032" height="1310" rx="34" fill="\${mono ? '#ffffff' : pale}" stroke="\${primary}" stroke-width="4"/>
+    <path d="M60 58h300M720 58h300" stroke="\${primary}" stroke-width="2"/>
+    <text x="60" y="49" font-family="Arial" font-size="18" font-weight="700" fill="\${primary}">Nombre:</text>
+    <text x="720" y="49" font-family="Arial" font-size="18" font-weight="700" fill="\${primary}">Fecha:</text>
+    <rect x="42" y="82" width="996" height="185" rx="30" fill="url(#wsHead)"/>
+    <text x="540" y="116" text-anchor="middle" font-family="Arial" font-size="20" font-weight="800" fill="#ffffff">\${esc((material.area || '') + ' · ' + (material.grade || ''))}</text>
+    \${textLines(title, 540, 170, 44, '#ffffff', 900, 1.08, 'middle')}
+    \${textLines(wrap(material.purpose || material.subtitle || '', 76, 2), 540, 240, 21, '#ffffff', 500, 1.15, 'middle')}
+    \${cards}
+    <text x="56" y="1288" font-family="Arial" font-size="21" font-weight="900" fill="\${primary}">INNOVAR PARA ENSEÑAR</text>
+    <text x="1024" y="1288" text-anchor="end" font-family="Arial" font-size="19" fill="\${primary}">Contexto educativo del Perú</text>
+  </svg>\`;
+}
+
+function renderTimeline(material) {
+  const { primary, accent, pale } = visualPalette(material);
+  const sections = Array.isArray(material.sections) ? material.sections.slice(0, 3) : [];
+  const tasks = Array.isArray(material.activities) ? material.activities.slice(0, 3) : [];
+  const title = wrap(material.title, 34, 2);
+  const events = [0, 1, 2].map((i) => {
+    const y = 315 + i * 300;
+    const heading = wrap(sections[i]?.heading || ('Momento ' + (i + 1)), 34, 2);
+    const body = wrap(sections[i]?.body || '', 58, 4);
+    const task = wrap(tasks[i] || '', 58, 2);
+    return \`<g>
+      <circle cx="158" cy="\${y + 78}" r="38" fill="\${i % 2 ? accent : primary}" stroke="#ffffff" stroke-width="7"/>
+      <text x="158" y="\${y + 90}" text-anchor="middle" font-family="Arial" font-size="30" font-weight="900" fill="#ffffff">\${i + 1}</text>
+      <rect x="225" y="\${y}" width="795" height="245" rx="28" fill="#ffffff" stroke="\${i % 2 ? accent : primary}" stroke-width="3"/>
+      \${textLines(heading, 265, y + 52, 30, i % 2 ? accent : primary, 900, 1.12)}
+      \${textLines(body, 265, y + 120, 23, '#29465b', 500, 1.3)}
+      <rect x="250" y="\${y + 188}" width="740" height="40" rx="18" fill="\${pale}"/>
+      \${textLines(task, 270, y + 215, 18, '#334e61', 700, 1.1)}
+    </g>\`;
+  }).join('');
+  return \`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+    <defs><linearGradient id="tlHead" x1="0" x2="1"><stop offset="0" stop-color="\${primary}"/><stop offset="1" stop-color="\${accent}"/></linearGradient></defs>
+    <rect width="1080" height="1350" fill="\${pale}"/>
+    <rect width="1080" height="250" fill="url(#tlHead)"/>
+    <text x="54" y="62" font-family="Arial" font-size="22" font-weight="800" fill="#ffffff">\${esc((material.area || '') + ' · ' + (material.level || 'Educación básica'))}</text>
+    \${textLines(title, 54, 126, 46, '#ffffff', 900, 1.08)}
+    \${textLines(wrap(material.subtitle || material.purpose || '', 70, 2), 56, 226, 22, '#ffffff', 500, 1.15)}
+    <path d="M158 345V1125" stroke="\${primary}" stroke-width="12" stroke-linecap="round"/>
+    <path d="M130 1100l28 44 28-44" fill="\${primary}"/>
+    \${events}
+    <text x="54" y="1298" font-family="Arial" font-size="22" font-weight="900" fill="\${primary}">INNOVAR PARA ENSEÑAR</text>
+    <text x="1026" y="1298" text-anchor="end" font-family="Arial" font-size="20" fill="#52687a">Perú · \${esc(material.grade || '')}</text>
+  </svg>\`;
+}
+
+function renderOrganizer(material) {
+  const { primary, accent, pale, line } = visualPalette(material);
+  const sections = Array.isArray(material.sections) ? material.sections.slice(0, 3) : [];
+  const tasks = Array.isArray(material.activities) ? material.activities.slice(0, 3) : [];
+  const title = wrap(material.title, 34, 2);
+  const nodes = [0, 1, 2].map((i) => {
+    const y = 500 + i * 245;
+    const heading = wrap(sections[i]?.heading || ('Idea ' + (i + 1)), 32, 2);
+    const body = wrap(sections[i]?.body || '', 64, 3);
+    const task = wrap(tasks[i] || '', 62, 1);
+    return \`<g>
+      <path d="M540 420 C540 \${y - 35}, 180 \${y - 35}, 180 \${y + 55}" fill="none" stroke="\${i % 2 ? accent : primary}" stroke-width="5"/>
+      <circle cx="180" cy="\${y + 55}" r="18" fill="\${i % 2 ? accent : primary}"/>
+      <rect x="215" y="\${y}" width="805" height="190" rx="30" fill="#ffffff" stroke="\${i % 2 ? accent : primary}" stroke-width="3"/>
+      \${textLines(heading, 255, y + 48, 28, i % 2 ? accent : primary, 900, 1.1)}
+      \${textLines(body, 255, y + 108, 22, '#29465b', 500, 1.28)}
+      <path d="M255 \${y + 158}h715" stroke="\${line}" stroke-width="2"/>
+      \${textLines(task, 255, y + 180, 17, '#52687a', 700, 1.05)}
+    </g>\`;
+  }).join('');
+  return \`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+    <defs><linearGradient id="orgHead" x1="0" x2="1"><stop offset="0" stop-color="\${primary}"/><stop offset="1" stop-color="\${accent}"/></linearGradient></defs>
+    <rect width="1080" height="1350" fill="\${pale}"/>
+    <rect width="1080" height="250" fill="url(#orgHead)"/>
+    <text x="54" y="60" font-family="Arial" font-size="22" font-weight="800" fill="#ffffff">\${esc((material.area || '') + ' · ' + (material.grade || ''))}</text>
+    \${textLines(title, 54, 126, 46, '#ffffff', 900, 1.08)}
+    <rect x="165" y="285" width="750" height="135" rx="68" fill="#ffffff" stroke="\${accent}" stroke-width="5"/>
+    \${textLines(wrap(material.purpose || material.subtitle || '', 64, 3), 540, 330, 22, primary, 800, 1.25, 'middle')}
+    \${nodes}
+    <text x="54" y="1298" font-family="Arial" font-size="22" font-weight="900" fill="\${primary}">INNOVAR PARA ENSEÑAR</text>
+    <text x="1026" y="1298" text-anchor="end" font-family="Arial" font-size="20" fill="#52687a">Contexto peruano</text>
+  </svg>\`;
+}
+
+function renderSvg(material) {
+  const visual = String(material.visual_type || material.type || '').toLowerCase();
+  if (visual.includes('linea_tiempo')) return renderTimeline(material);
+  if (visual.includes('organizador_visual')) return renderOrganizer(material);
+  if (visual.includes('ficha_practica') || visual.includes('reto_matematico') || visual.includes('blanco_negro')) return renderWorksheet(material);
+  return renderTheory(material);
 }
 
 const results = [];
