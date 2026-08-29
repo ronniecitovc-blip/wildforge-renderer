@@ -1,0 +1,52 @@
+name: Render WildForge MP4
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_file:
+        description: 'Ruta del manifest JSON dentro del repo'
+        required: true
+        default: 'input/manifest.json'
+      output_filename:
+        description: 'Nombre del MP4 de salida'
+        required: true
+        default: 'wildforge_video.mp4'
+      callback_url:
+        description: 'Webhook de n8n para subir MP4 a Drive. Opcional.'
+        required: false
+        default: ''
+      folder_id:
+        description: 'ID de carpeta Google Drive. Opcional si usas callback.'
+        required: false
+        default: ''
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Read manifest
+        run: |
+          mkdir -p output dist
+          cp "${{ inputs.input_file }}" output/manifest.json
+      - name: Render MP4
+        run: |
+          npx remotion render src/index.tsx WildForgeVideo "dist/${{ inputs.output_filename }}" --props="$(cat output/manifest.json)"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.output_filename }}
+          path: dist/${{ inputs.output_filename }}
+      - name: Send MP4 to n8n callback
+        if: ${{ inputs.callback_url != '' }}
+        run: |
+          FINAL_URL="${{ inputs.callback_url }}?folder_id=${{ inputs.folder_id }}&filename=${{ inputs.output_filename }}"
+          curl --fail --request POST --header "Content-Type: video/mp4" --data-binary "@dist/${{ inputs.output_filename }}" "$FINAL_URL"
