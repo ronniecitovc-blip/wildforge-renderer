@@ -1,0 +1,16 @@
+{
+  "slot": 1,
+  "video_id": "WF-SAMPLE-001",
+  "topic": "El pez arquero y su disparo perfecto",
+  "title": "El cazador del agua",
+  "description": "Un pez que usa física para cazar insectos fuera del agua.",
+  "hashtags": "#naturaleza #pezarquero #ciencia #animales",
+  "scheduled_time": "2026-08-29T17:30:00.000Z",
+  "script": "Conoce al pez arquero. Cuando detecta un insecto sobre una hoja, dispara un chorro de agua a presión para derribarlo. Lo más fascinante es cómo compensa la refracción de la luz al pasar del agua al aire. Su sistema visual le permite ajustar el ángulo de disparo con gran eficacia. Es una de las adaptaciones de caza más estudiadas del mundo acuático.",
+  "scenes": [
+    {"segundos":"0-5","visual":"Fondo acuático oscuro con partículas luminosas","texto_pantalla":"¿Un pez que dispara agua?"},
+    {"segundos":"5-15","visual":"Silueta de pez apuntando hacia una hoja","texto_pantalla":"El pez arquero calcula el ángulo"},
+    {"segundos":"15-30","visual":"Chorro de agua subiendo desde el río","texto_pantalla":"Compensa la refracción de la luz"},
+    {"segundos":"30-48","visual":"Insecto cae al agua","texto_pantalla":"Una adaptación de caza sorprendente"}
+  ]
+}
