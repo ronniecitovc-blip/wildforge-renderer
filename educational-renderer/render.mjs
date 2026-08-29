@@ -101,4 +101,3 @@ for (let i = 0; i < manifest.materials.length; i++) {
   });
 }
 fs.writeFileSync('render-result.json', JSON.stringify({ status: 'ok', run_id: manifest.run_id, materials: results }, null, 2));
-`
