@@ -1,0 +1,56 @@
+name: Extract Facebook PDF pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_b64:
+        description: "PDF extraction manifest encoded in Base64"
+        required: true
+      resumeUrl:
+        description: "Temporary n8n resume URL"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Prepare manifest
+        env:
+          MANIFEST_B64: ${{ inputs.manifest_b64 }}
+        run: |
+          printf '%s' "$MANIFEST_B64" | base64 --decode > pdf-manifest.json
+      - name: Download PDF through n8n
+        run: |
+          PDF_URL="$(node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('pdf-manifest.json','utf8')); const u=new URL(m.pdf_webhook_base.replace(/\/$/,'') + '/' + encodeURIComponent(m.file_id)); u.searchParams.set('token', m.pdf_token); console.log(u.toString());")"
+          curl --fail --location --silent --show-error "$PDF_URL" --output source.pdf
+          test -s source.pdf
+      - name: Extract selected pages
+        run: node educational-renderer/pdf-extract.mjs pdf-manifest.json
+      - name: Publish extracted images
+        run: |
+          git config user.name "facebook-pdf-extractor"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/facebook
+          git commit -m "Facebook PDF pages $(date -u +%Y-%m-%dT%H:%M:%SZ)" || true
+          git push
+      - name: Wait for public raw files
+        run: sleep 8
+      - name: Resume n8n
+        env:
+          CALLBACK_URL: ${{ inputs.resumeUrl }}
+        run: |
+          curl --fail --request POST --header "Content-Type: application/json" --data-binary @pdf-render-result.json "$CALLBACK_URL"
