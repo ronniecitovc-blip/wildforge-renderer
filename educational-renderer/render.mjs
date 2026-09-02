@@ -48,13 +48,13 @@ function icon(area, color) {
 function card(x, y, w, h, heading, body, accent, index) {
   const compact = w < 600;
   const title = wrap(heading, compact ? 22 : 52, 2);
-  const content = wrap(body, compact ? 31 : 72, compact ? 6 : 4);
+  const content = wrap(body, compact ? 36 : 72, compact ? 7 : 4);
   return `<g>
     <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30" fill="#ffffff" stroke="#dbe7ef" stroke-width="3"/>
     <circle cx="${x + 48}" cy="${y + 55}" r="28" fill="${accent}"/>
     <text x="${x + 48}" y="${y + 66}" text-anchor="middle" font-family="Arial" font-size="30" font-weight="900" fill="#fff">${index}</text>
     ${textLines(title, x + 92, y + 55, 26, '#12304a', 800, 1.15)}
-    ${textLines(content, x + 36, y + 130, 22, '#29465b', 500, 1.34)}
+    ${textLines(content, x + 36, y + (compact ? 120 : 130), compact ? 19 : 22, '#29465b', 500, compact ? 1.24 : 1.34)}
   </g>`;
 }
 
@@ -80,7 +80,7 @@ function renderTheory(material) {
     <rect x="45" y="900" width="990" height="360" rx="34" fill="#fff8e8" stroke="${accent}" stroke-width="4"/>
     <rect x="45" y="900" width="990" height="66" rx="30" fill="${accent}"/>
     <text x="86" y="944" font-family="Arial" font-size="31" font-weight="900" fill="#fff">Reflexiona y aplica</text>
-    ${questions.map((q, i) => textLines(wrap(`${i + 1}. ${q}`, 76, 3), 82, 1015 + i * 82, 25, '#263746', 600, 1.22)).join('')}
+    ${questions.map((q, i) => textLines(wrap(`${i + 1}. ${q}`, 64, 3), 82, 1015 + i * 82, 23, '#263746', 600, 1.2)).join('')}
   </svg>`;
 }
 
@@ -105,14 +105,14 @@ function renderWorksheet(material) {
   const cards = [0, 1, 2].map((i) => {
     const y = 235 + i * 340;
     const heading = wrap(sections[i]?.heading || ('Actividad ' + (i + 1)), 30, 2);
-    const problem = wrap(sections[i]?.body || '', 44, 4);
+    const problem = wrap(sections[i]?.body || '', 48, 6);
     const task = wrap(tasks[i] || '', 44, 2);
     return `<g>
       <rect x="42" y="${y}" width="996" height="310" rx="28" fill="#ffffff" stroke="${mono ? '#111111' : (i % 2 ? accent : primary)}" stroke-width="3"/>
       <circle cx="84" cy="${y + 45}" r="28" fill="${mono ? '#ffffff' : (i % 2 ? accent : primary)}" stroke="${primary}" stroke-width="3"/>
       <text x="84" y="${y + 56}" text-anchor="middle" font-family="Arial" font-size="28" font-weight="900" fill="${mono ? '#111111' : '#ffffff'}">${i + 1}</text>
       ${textLines(heading, 126, y + 48, 25, '#15324a', 800, 1.12)}
-      ${textLines(problem, 72, y + 98, 19, '#29465b', 600, 1.24)}
+      ${textLines(problem, 72, y + 98, 17, '#29465b', 600, 1.2)}
       ${textLines(task, 72, y + 262, 17, primary, 800, 1.16)}
       <rect x="548" y="${y + 32}" width="245" height="235" rx="20" fill="${pale}" stroke="${line}" stroke-width="3" stroke-dasharray="10 8"/>
       <text x="670" y="${y + 65}" text-anchor="middle" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Representa o dibuja</text>
