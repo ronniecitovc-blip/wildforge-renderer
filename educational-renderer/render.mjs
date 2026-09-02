@@ -66,26 +66,21 @@ function renderTheory(material) {
   const sections = Array.isArray(material.sections) ? material.sections.slice(0, 3) : [];
   while (sections.length < 3) sections.push({ heading: sections.length === 0 ? 'Idea clave' : 'Para recordar', body: material.summary || material.purpose || '' });
   const questions = Array.isArray(material.activities) ? material.activities.slice(0, 3) : [];
-  const title = wrap(material.title, 34, 3);
+  const title = wrap(material.title, 38, 2);
   const subtitle = wrap(material.subtitle || material.purpose || '', 66, 2);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
     <defs><linearGradient id="header" x1="0" x2="1"><stop offset="0" stop-color="${primary}"/><stop offset="1" stop-color="${accent}"/></linearGradient></defs>
     <rect width="1080" height="1350" fill="${pale}"/>
-    <rect width="1080" height="285" fill="url(#header)"/>
-    <rect x="42" y="36" width="440" height="48" rx="24" fill="#fff" opacity=".22"/>
-    <text x="262" y="69" text-anchor="middle" font-family="Arial" font-size="23" font-weight="800" fill="#fff">${esc((material.type || 'Ficha educativa') + ' · ' + (material.level || 'Educación básica'))}</text>
-    ${textLines(title, 54, 135, 50, '#ffffff', 900, 1.08)}
-    ${textLines(subtitle, 56, 242, 24, '#f8fafc', 500, 1.18)}
-    ${icon(material.area, accent)}
-    ${card(45, 320, 480, 320, sections[0].heading, sections[0].body, primary, 1)}
-    ${card(555, 320, 480, 320, sections[1].heading, sections[1].body, accent, 2)}
-    ${card(45, 670, 990, 250, sections[2].heading, sections[2].body, primary, 3)}
-    <rect x="45" y="950" width="990" height="285" rx="34" fill="#fff8e8" stroke="${accent}" stroke-width="4"/>
-    <rect x="45" y="950" width="990" height="66" rx="30" fill="${accent}"/>
-    <text x="86" y="994" font-family="Arial" font-size="31" font-weight="900" fill="#fff">Ahora practica y reflexiona</text>
-    ${questions.map((q, i) => textLines(wrap(`${i + 1}. ${q}`, 76, 2), 82, 1062 + i * 58, 25, '#263746', 600, 1.22)).join('')}
-    <text x="54" y="1298" font-family="Arial" font-size="22" font-weight="800" fill="${primary}">INNOVAR PARA ENSEÑAR</text>
-    <text x="1026" y="1298" text-anchor="end" font-family="Arial" font-size="20" fill="#52687a">${esc(material.area || 'Educación básica')} · ${esc(material.grade || '')}</text>
+    <rect width="1080" height="235" fill="url(#header)"/>
+    ${textLines(title, 54, 86, 54, '#ffffff', 900, 1.08)}
+    ${textLines(subtitle, 56, 186, 24, '#f8fafc', 500, 1.18)}
+    ${card(45, 270, 480, 320, sections[0].heading, sections[0].body, primary, 1)}
+    ${card(555, 270, 480, 320, sections[1].heading, sections[1].body, accent, 2)}
+    ${card(45, 620, 990, 250, sections[2].heading, sections[2].body, primary, 3)}
+    <rect x="45" y="900" width="990" height="360" rx="34" fill="#fff8e8" stroke="${accent}" stroke-width="4"/>
+    <rect x="45" y="900" width="990" height="66" rx="30" fill="${accent}"/>
+    <text x="86" y="944" font-family="Arial" font-size="31" font-weight="900" fill="#fff">Reflexiona y aplica</text>
+    ${questions.map((q, i) => textLines(wrap(`${i + 1}. ${q}`, 76, 3), 82, 1015 + i * 82, 25, '#263746', 600, 1.22)).join('')}
   </svg>`;
 }
 
@@ -108,42 +103,33 @@ function renderWorksheet(material) {
   const tasks = Array.isArray(material.activities) ? material.activities.slice(0, 3) : [];
   const title = wrap(material.title, 34, 2);
   const cards = [0, 1, 2].map((i) => {
-    const y = 300 + i * 285;
+    const y = 235 + i * 340;
     const heading = wrap(sections[i]?.heading || ('Actividad ' + (i + 1)), 30, 2);
     const problem = wrap(sections[i]?.body || '', 44, 4);
     const task = wrap(tasks[i] || '', 44, 2);
     return `<g>
-      <rect x="42" y="${y}" width="996" height="260" rx="28" fill="#ffffff" stroke="${mono ? '#111111' : (i % 2 ? accent : primary)}" stroke-width="3"/>
+      <rect x="42" y="${y}" width="996" height="310" rx="28" fill="#ffffff" stroke="${mono ? '#111111' : (i % 2 ? accent : primary)}" stroke-width="3"/>
       <circle cx="84" cy="${y + 45}" r="28" fill="${mono ? '#ffffff' : (i % 2 ? accent : primary)}" stroke="${primary}" stroke-width="3"/>
       <text x="84" y="${y + 56}" text-anchor="middle" font-family="Arial" font-size="28" font-weight="900" fill="${mono ? '#111111' : '#ffffff'}">${i + 1}</text>
       ${textLines(heading, 126, y + 48, 25, '#15324a', 800, 1.12)}
       ${textLines(problem, 72, y + 98, 19, '#29465b', 600, 1.24)}
-      ${textLines(task, 72, y + 210, 17, primary, 800, 1.16)}
-      <rect x="548" y="${y + 32}" width="250" height="190" rx="20" fill="${pale}" stroke="${line}" stroke-width="3" stroke-dasharray="10 8"/>
-      <text x="673" y="${y + 65}" text-anchor="middle" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Representa o dibuja</text>
-      <path d="M575 ${y + 190}h196 M575 ${y + 155}h196 M575 ${y + 120}h196" stroke="${line}" stroke-width="2" opacity=".7"/>
-      <rect x="822" y="${y + 32}" width="190" height="88" rx="18" fill="#ffffff" stroke="${line}" stroke-width="3"/>
-      <text x="842" y="${y + 60}" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Operación</text>
-      <path d="M846 ${y + 96}h142" stroke="${primary}" stroke-width="2"/>
-      <rect x="822" y="${y + 134}" width="190" height="88" rx="18" fill="#ffffff" stroke="${line}" stroke-width="3"/>
-      <text x="842" y="${y + 162}" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Respuesta</text>
-      <path d="M846 ${y + 198}h142" stroke="${primary}" stroke-width="2"/>
+      ${textLines(task, 72, y + 262, 17, primary, 800, 1.16)}
+      <rect x="548" y="${y + 32}" width="245" height="235" rx="20" fill="${pale}" stroke="${line}" stroke-width="3" stroke-dasharray="10 8"/>
+      <text x="670" y="${y + 65}" text-anchor="middle" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Representa o dibuja</text>
+      <rect x="817" y="${y + 32}" width="195" height="155" rx="18" fill="#ffffff" stroke="${line}" stroke-width="3"/>
+      <text x="837" y="${y + 60}" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Operación</text>
+      <rect x="817" y="${y + 202}" width="195" height="65" rx="18" fill="#ffffff" stroke="${line}" stroke-width="3"/>
+      <text x="837" y="${y + 232}" font-family="Arial" font-size="18" font-weight="800" fill="${primary}">Respuesta</text>
     </g>`;
   }).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
     <defs><linearGradient id="wsHead" x1="0" x2="1"><stop offset="0" stop-color="${primary}"/><stop offset="1" stop-color="${accent}"/></linearGradient></defs>
     <rect width="1080" height="1350" fill="${pale}"/>
     <rect x="24" y="20" width="1032" height="1310" rx="34" fill="${mono ? '#ffffff' : pale}" stroke="${primary}" stroke-width="4"/>
-    <path d="M60 58h300M720 58h300" stroke="${primary}" stroke-width="2"/>
-    <text x="60" y="49" font-family="Arial" font-size="18" font-weight="700" fill="${primary}">Nombre:</text>
-    <text x="720" y="49" font-family="Arial" font-size="18" font-weight="700" fill="${primary}">Fecha:</text>
-    <rect x="42" y="82" width="996" height="185" rx="30" fill="url(#wsHead)"/>
-    <text x="540" y="116" text-anchor="middle" font-family="Arial" font-size="20" font-weight="800" fill="#ffffff">${esc((material.area || '') + ' · ' + (material.grade || ''))}</text>
-    ${textLines(title, 540, 170, 44, '#ffffff', 900, 1.08, 'middle')}
-    ${textLines(wrap(material.purpose || material.subtitle || '', 76, 2), 540, 240, 21, '#ffffff', 500, 1.15, 'middle')}
+    <rect x="42" y="40" width="996" height="165" rx="30" fill="url(#wsHead)"/>
+    ${textLines(title, 540, 102, 48, '#ffffff', 900, 1.08, 'middle')}
+    ${textLines(wrap(material.subtitle || '', 76, 2), 540, 170, 21, '#ffffff', 500, 1.15, 'middle')}
     ${cards}
-    <text x="56" y="1288" font-family="Arial" font-size="21" font-weight="900" fill="${primary}">INNOVAR PARA ENSEÑAR</text>
-    <text x="1024" y="1288" text-anchor="end" font-family="Arial" font-size="19" fill="${primary}">Contexto educativo del Perú</text>
   </svg>`;
 }
 
@@ -177,8 +163,6 @@ function renderTimeline(material) {
     <path d="M158 345V1125" stroke="${primary}" stroke-width="12" stroke-linecap="round"/>
     <path d="M130 1100l28 44 28-44" fill="${primary}"/>
     ${events}
-    <text x="54" y="1298" font-family="Arial" font-size="22" font-weight="900" fill="${primary}">INNOVAR PARA ENSEÑAR</text>
-    <text x="1026" y="1298" text-anchor="end" font-family="Arial" font-size="20" fill="#52687a">Perú · ${esc(material.grade || '')}</text>
   </svg>`;
 }
 
@@ -211,8 +195,6 @@ function renderOrganizer(material) {
     <rect x="165" y="285" width="750" height="135" rx="68" fill="#ffffff" stroke="${accent}" stroke-width="5"/>
     ${textLines(wrap(material.purpose || material.subtitle || '', 64, 3), 540, 330, 22, primary, 800, 1.25, 'middle')}
     ${nodes}
-    <text x="54" y="1298" font-family="Arial" font-size="22" font-weight="900" fill="${primary}">INNOVAR PARA ENSEÑAR</text>
-    <text x="1026" y="1298" text-anchor="end" font-family="Arial" font-size="20" fill="#52687a">Contexto peruano</text>
   </svg>`;
 }
 
