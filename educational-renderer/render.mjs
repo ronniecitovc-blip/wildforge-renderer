@@ -48,13 +48,13 @@ function icon(area, color) {
 function card(x, y, w, h, heading, body, accent, index) {
   const compact = w < 600;
   const title = wrap(heading, compact ? 22 : 52, 2);
-  const content = wrap(body, compact ? 36 : 72, compact ? 7 : 4);
+  const content = wrap(body, compact ? 38 : 72, compact ? 9 : 4);
   return `<g>
     <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="30" fill="#ffffff" stroke="#dbe7ef" stroke-width="3"/>
     <circle cx="${x + 48}" cy="${y + 55}" r="28" fill="${accent}"/>
     <text x="${x + 48}" y="${y + 66}" text-anchor="middle" font-family="Arial" font-size="30" font-weight="900" fill="#fff">${index}</text>
     ${textLines(title, x + 92, y + 55, 26, '#12304a', 800, 1.15)}
-    ${textLines(content, x + 36, y + (compact ? 120 : 130), compact ? 19 : 22, '#29465b', 500, compact ? 1.24 : 1.34)}
+    ${textLines(content, x + 36, y + (compact ? 120 : 130), compact ? 17 : 22, '#29465b', 500, compact ? 1.18 : 1.34)}
   </g>`;
 }
 
