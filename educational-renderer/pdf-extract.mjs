@@ -10,7 +10,31 @@ const branch = 'main';
 const date = manifest.date;
 const runId = manifest.run_id;
 const pageStart = Math.max(1, Number(manifest.page_start || 1));
-const pageEnd = Math.max(pageStart, Math.min(pageStart + 2, Number(manifest.page_end || pageStart)));
+const normalizedFileName = String(manifest.file_name || '')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase()
+  .trim();
+
+const requestedCount = Math.max(
+  1,
+  Number(manifest.page_end || pageStart) - pageStart + 1,
+);
+
+let pageCount;
+if (normalizedFileName === 'lectora de comprension 1.pdf') {
+  pageCount = 4;
+} else if (normalizedFileName === 'texto fluido 5 basico.pdf') {
+  pageCount = 3;
+} else if (normalizedFileName === 'comprension lectora 3er grado.pdf') {
+  pageCount = Math.max(5, Math.min(10, requestedCount));
+} else if (normalizedFileName === '5to plan lector pdf.pdf') {
+  pageCount = 10;
+} else {
+  pageCount = Math.min(10, requestedCount);
+}
+
+const pageEnd = pageStart + pageCount - 1;
 const sourcePdf = manifest.source_pdf || 'source.pdf';
 const outDir = path.join('public', 'facebook', date, runId);
 
