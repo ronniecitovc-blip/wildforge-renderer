@@ -72,6 +72,13 @@ function renderTheory(material) {
     <defs><linearGradient id="header" x1="0" x2="1"><stop offset="0" stop-color="${primary}"/><stop offset="1" stop-color="${accent}"/></linearGradient></defs>
     <rect width="1080" height="1350" fill="${pale}"/>
     <rect width="1080" height="235" fill="url(#header)"/>
+    <circle cx="930" cy="82" r="118" fill="#ffffff" opacity=".10"/>
+    <circle cx="1000" cy="188" r="68" fill="#ffffff" opacity=".08"/>
+    <g transform="translate(870 54)" fill="none" stroke="#ffffff" stroke-width="8" opacity=".55">
+      <path d="M12 28c34-18 68-18 102 0v112c-34-18-68-18-102 0z"/>
+      <path d="M114 28c34-18 68-18 102 0v112c-34-18-68-18-102 0z"/>
+      <path d="M114 28v112"/>
+    </g>
     ${textLines(title, 54, 86, 54, '#ffffff', 900, 1.08)}
     ${textLines(subtitle, 56, 186, 24, '#f8fafc', 500, 1.18)}
     ${card(45, 270, 480, 320, sections[0].heading, sections[0].body, primary, 1)}
@@ -79,8 +86,15 @@ function renderTheory(material) {
     ${card(45, 620, 990, 250, sections[2].heading, sections[2].body, primary, 3)}
     <rect x="45" y="900" width="990" height="360" rx="34" fill="#fff8e8" stroke="${accent}" stroke-width="4"/>
     <rect x="45" y="900" width="990" height="66" rx="30" fill="${accent}"/>
-    <text x="86" y="944" font-family="Arial" font-size="31" font-weight="900" fill="#fff">Reflexiona y aplica</text>
+    <text x="86" y="944" font-family="Arial" font-size="31" font-weight="900" fill="#fff">Para llevar al aula</text>
     ${questions.map((q, i) => textLines(wrap(`${i + 1}. ${q}`, 64, 3), 82, 1015 + i * 82, 23, '#263746', 600, 1.2)).join('')}
+    <rect x="0" y="1292" width="1080" height="58" fill="${primary}"/>
+    <g transform="translate(42 1308)" fill="none" stroke="#ffffff" stroke-width="3">
+      <path d="M0 4c13-7 26-7 39 0v29c-13-7-26-7-39 0z"/>
+      <path d="M39 4c13-7 26-7 39 0v29c-13-7-26-7-39 0z"/>
+      <path d="M39 4v29"/>
+    </g>
+    <text x="142" y="1331" font-family="Arial, DejaVu Sans, sans-serif" font-size="24" font-weight="800" fill="#ffffff">Innovar para Enseñar</text>
   </svg>`;
 }
 
